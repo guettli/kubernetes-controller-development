@@ -59,6 +59,30 @@ Guideline: A controller does not read its own status.
 
 After a backup+restore the status will be empty. The controller need to check the actual state and then create a matching status.
 
+## CRDs: no foreign keys
+
+In a relational database you can create a foreign key, and you can be shure that the foreign key will never be broken.
+
+I admit, that I miss this feature in the Kubernetes API.
+
+## CRDs: Webhooks: Order of restore
+
+Imagine you have a CRD which represents a datacenter. 
+
+And you have a second CRD which represents a server.
+
+We created a validating web hook which ensures that for a server spec.datacenter contains a string which
+has a corresponding datacenter.metadata.name.
+
+The web hook works fine.
+
+Except during a restore.
+
+Related: https://velero.io/docs/main/troubleshooting/#known-issue-with-restoring-resources-when-admission-webhooks-are-enabled
+
+Disabling the web hook during restore is a manual task which I would like to avoid. This is not solved yet.
+
+
 # Related
 
 * [Thomas WOL: Working out Loud](https://github.com/guettli/wol)

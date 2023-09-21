@@ -82,6 +82,14 @@ Related: https://velero.io/docs/main/troubleshooting/#known-issue-with-restoring
 
 Disabling the web hook during restore is a manual task which I would like to avoid. This is not solved yet.
 
+# Tools
+
+Tools I use for developing with Golang and Kubernetes
+
+* vscode
+* [kubespy](https://github.com/pulumi/kubespy) Tools for observing Kubernetes resources in real time
+* [kubectl stern](https://github.com/stern/stern) Multi pod and container log tailing for Kubernetes
+* [check-conditions](https://github.com/guettli/check-conditions) my tool the check all conditions of all resources in a cluster
 
 # Related
 

@@ -82,6 +82,30 @@ Related: https://velero.io/docs/main/troubleshooting/#known-issue-with-restoring
 
 Disabling the web hook during restore is a manual task which I would like to avoid. This is not solved yet.
 
+## Client.Get(key, r.Client.Get(ctx, key, &myresource) finds nothing?
+
+If `r.Client.Get(key, r.Client.Get(ctx, key, &myresource)` does not find a resource, but you can see it with kubectl, then two things could be wrong:
+
+* RBAC
+* Client Cache
+
+To check RBAC, you can use that (if your Go code can't find a secret):
+
+```Go
+kubectl describe secret \
+   --as=system:serviceaccount:your-namespace-of-the-controller:your-serviceaccount \
+    -n namespace-of-secret \
+    your-secret
+```
+You can find the name of the service-account by looking at the pod.
+
+Client Caching: check `ctrl.NewManager()` (usualy in main.go). Maybe there is some filter which makes the cache hide a lot of objects which would be visible otherwise.
+
+
+
+
+
+
 # Tools
 
 Tools I use for developing with Golang and Kubernetes

@@ -104,7 +104,17 @@ Client Caching: check `ctrl.NewManager()` (usualy in main.go). Maybe there is so
 
 
 
+# Use controller-runtime Client (even for non-controllers)
 
+Yes, you may use the controller-runtime Client, even if you do not develop a controller.
+
+I prefer this Client to the client-Go Client.
+
+# Use controllerutil.CreateOrUpdate()
+
+The [controllerutil.CreateOrUpdate()](https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/controller/controllerutil#CreateOrUpdate) function is very handy, if you reconcile child resources.
+
+Example: You have CRD MyParent which creates "child" resources of type "MyChild". During the reconcile of MyParent you can use above function to ensure that the child resource is in the desired state. This detects changes, so it is not only "create child, if id does not existing yet". 
 
 # Tools
 

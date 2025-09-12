@@ -286,6 +286,27 @@ Linter](https://github.com/kubernetes-sigs/kube-api-linter)
 
 Installing the this linter is not straight forward, so I have not used it much yet.
 
+## Apply is easy, prune is hard.
+
+When a controller creates resources, it is usually via structured resources, and the controller uses `SetControllerReference`.
+
+But sometimes you want to apply some "random" yaml, just like `kubectl` does. You should know:
+
+> Apply is easy, prune is hard.
+
+Imagine you apply 5 yaml manifests today. Updating these 5 manifests tomorrow is easy.
+
+But imagine some weeks later, your code receives only 4 yaml manifests, because one manifest is no longer needed.
+
+How to delete this obsolete manifest?
+
+There are two solutions:
+
+* Option 1: Label all objects you create, so that you can find all objects you applied in the past
+* Option 2: Keep some kind of inventory. For example in a configMap.
+
+Option2 is available via [kubernetes-sigs/cli-utils](https://github.com/kubernetes-sigs/cli-utils)
+
 ## Tools
 
 Tools I use for developing with Golang and Kubernetes

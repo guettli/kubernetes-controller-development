@@ -307,6 +307,46 @@ There are two solutions:
 
 Option2 is available via [kubernetes-sigs/cli-utils](https://github.com/kubernetes-sigs/cli-utils)
 
+## Setting Conditions, idempotent
+
+Before, we created the condition at the end of createServer().
+
+```go
+func (s *Service) createServer(ctx context.Context) (*hcloud.Server, error) {
+  ...
+	// Create the server
+	server, err := s.scope.HCloudClient.CreateServer(ctx, opts)
+	if err != nil {
+		conditions.MarkFalse(
+			s.scope.HCloudMachine,
+			infrav1.ServerCreateSucceededCondition,
+			infrav1.ServerCreateFailedReason,
+			clusterv1.ConditionSeverityWarning,
+			"%s",
+			err.Error(),
+		)
+  return ...
+}
+	conditions.MarkTrue(s.scope.HCloudMachine, infrav1.ServerCreateSucceededCondition)
+```
+
+Imagine the controller dies between creating the server and MarkTrue. This means
+an old error on the Condition would be there for ever. 
+
+To fix that, the MarkTrue() must be called during every Reconcile(). Like this:
+
+
+```go
+	// if no server is found we have to create one
+	if server == nil {
+		server, err = s.createServer(ctx)
+		...
+	}
+	conditions.MarkTrue(s.scope.HCloudMachine, infrav1.ServerCreateSucceededCondition)
+```
+
+
+
 ## Tools
 
 Tools I use for developing with Golang and Kubernetes
